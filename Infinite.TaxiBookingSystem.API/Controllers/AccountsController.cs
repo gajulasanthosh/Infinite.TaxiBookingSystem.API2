@@ -27,6 +27,19 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             _dbContext = dbContext;
         }
 
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginModel login)
         {
@@ -59,5 +72,13 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
+        [HttpGet("GetName")]
+        public IActionResult GetName()
+        {
+            var login = User.FindFirstValue(ClaimTypes.Name);
+            return Ok(login);
+        }
+
     }
 }

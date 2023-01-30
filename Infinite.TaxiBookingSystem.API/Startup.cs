@@ -36,7 +36,7 @@ namespace Infinite.TaxiBookingSystem.API
             o.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                
+                ValidateAudience = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = Configuration["JWT:issuer"],
@@ -62,6 +62,7 @@ namespace Infinite.TaxiBookingSystem.API
             services.AddScoped<IGetRepository<BookingDto>, BookingRepository>();
             //services.AddScoped<IGetRepository<Customer>, CustomerRepository>();
             //services.AddScoped<IRepository<Customer>, CustomerRepository>();
+            
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

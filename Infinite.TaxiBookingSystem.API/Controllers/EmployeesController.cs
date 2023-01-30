@@ -86,23 +86,7 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             return Ok(designations);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> TransferData([FromBody] Employee employee)
-        //{
-        //    // Retrieve data from source table and map it to target model
-        //    Employee employee1 = new Employee
-        //    {
-        //        EmployeeId = User.EmployeeId
-                
-        //    };
-
-        //    // Save data in target table
-        //    _repository.User.Add(User);
-        //    await _repository.SaveChangesAsync();
-
-        //    // Return success status
-        //    return Ok();
-        //}
+        
 
     }
 }

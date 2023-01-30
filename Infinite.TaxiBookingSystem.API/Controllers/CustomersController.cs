@@ -40,8 +40,9 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             return NotFound("Customer not found");
         }
 
+
+        [Authorize(Roles ="Custoemer")]
         [HttpPost("CreateCustomer")]
-        [Authorize]
         public async Task<IActionResult> CreateCustomer([FromBody]Customer customer)
         {
             if (!ModelState.IsValid)
