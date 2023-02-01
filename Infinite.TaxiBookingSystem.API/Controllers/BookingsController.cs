@@ -1,5 +1,6 @@
 ﻿using Infinite.TaxiBookingSystem.API.Models;
 using Infinite.TaxiBookingSystem.API.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,11 +21,12 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
         private readonly ApplicationDbContext _dbContext;
 
 
-        public BookingsController(IRepository<Booking> repository, IBookingRepository bookingRepository, IGetRepository<BookingDto> bookingDtoRepository)
+        public BookingsController(IRepository<Booking> repository, IBookingRepository bookingRepository, IGetRepository<BookingDto> bookingDtoRepository,ApplicationDbContext dbContext)
         {
             _repository = repository;
             _bookingRepository = bookingRepository;
             _bookingDtoRepository = bookingDtoRepository;
+            _dbContext = dbContext;
         }
         [HttpGet("GetAllBookings")]
         public IEnumerable<BookingDto> GetBookings()
@@ -55,7 +57,7 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
         //    return NotFound("Please provide valid taxi");
 
         //}
-
+        [Authorize]
         [HttpPost("CreateBooking")]
         public async Task<IActionResult> CreateBooking([FromBody] Booking booking)
         {
@@ -63,6 +65,15 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             {
                 return BadRequest();
             }
+            booking.BookingDate = DateTime.Now;
+            int id = booking.CustomerID;
+            var loginId = User.FindFirstValue(ClaimTypes.Name);
+            var x = _dbContext.Users.FirstOrDefault(y => y.LoginID == loginId);
+            var booking2 = _dbContext.Customers.FirstOrDefault(y => y.CustomerId == x.CustomerID);
+
+            id =booking2.CustomerId;
+            //var id = _dbContext.Customers.Where(x => x.CustomerId)
+            //customerdata.CustomerID = booking.CustomerID;
             await _repository.Create(booking);
 
             return CreatedAtRoute("GetBookingById", new { id = booking.BookingId }, booking);

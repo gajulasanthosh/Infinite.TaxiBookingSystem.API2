@@ -35,7 +35,20 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             {
                 return BadRequest();
             }
-            
+            user.Role = "Customer";
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPost("RegisterEmployee")]
+        public async Task<IActionResult> RegisterEmployee(User user)
+        {
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
             return Ok();
@@ -66,7 +79,8 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             var myclaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role,user.Role),
-                new Claim(ClaimTypes.Name,user.LoginID)
+                new Claim(ClaimTypes.Name,user.LoginID),
+                
             };
             var token = new JwtSecurityToken(issuer: _configuration["JWT:issuer"],
                                             

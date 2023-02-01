@@ -44,7 +44,7 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
         }
 
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpPost("CreateCustomer")]
         public async Task<IActionResult> CreateCustomer([FromBody]Customer customer)
         {
