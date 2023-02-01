@@ -60,6 +60,7 @@ namespace Infinite.TaxiBookingSystem.API
             services.AddScoped<IRepository<Booking>, BookingRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IGetRepository<BookingDto>, BookingRepository>();
+            services.AddScoped<IBookingsStatusRepository<Booking>, EmployeeRepository>();
             //services.AddScoped<IGetRepository<Customer>, CustomerRepository>();
             //services.AddScoped<IRepository<Customer>, CustomerRepository>();
             

@@ -20,6 +20,7 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _dbContext;
+        
 
         public AccountsController(IConfiguration configuration, ApplicationDbContext dbContext)
         {
@@ -53,6 +54,8 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             {
                 return NotFound("Invalid credentials");
             }
+            
+            
             return Ok(token);
         }
         [NonAction]
@@ -78,6 +81,13 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
         {
             var login = User.FindFirstValue(ClaimTypes.Name);
             return Ok(login);
+        }
+
+        [HttpGet("GetRole")]
+        public IActionResult GetRole()
+        {
+            var Role = User.FindFirstValue(ClaimTypes.Role);
+            return Ok(Role);
         }
 
     }

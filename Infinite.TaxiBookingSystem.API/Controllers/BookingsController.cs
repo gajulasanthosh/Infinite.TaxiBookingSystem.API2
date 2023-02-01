@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Infinite.TaxiBookingSystem.API.Controllers
@@ -16,6 +17,7 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
         private readonly IRepository<Booking> _repository;
         private readonly IBookingRepository _bookingRepository;
         private readonly IGetRepository<BookingDto> _bookingDtoRepository;
+        private readonly ApplicationDbContext _dbContext;
 
 
         public BookingsController(IRepository<Booking> repository, IBookingRepository bookingRepository, IGetRepository<BookingDto> bookingDtoRepository)
@@ -62,6 +64,7 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
                 return BadRequest();
             }
             await _repository.Create(booking);
+
             return CreatedAtRoute("GetBookingById", new { id = booking.BookingId }, booking);
 
         }

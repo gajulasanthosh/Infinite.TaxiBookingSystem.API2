@@ -24,5 +24,7 @@ namespace Infinite.TaxiBookingSystem.API.Models
         public Customer Customer { get; set; }
         //foriegn key
         public int TaxiId { get; set; }
+
+        public string Status { get; set; }
     }
 }

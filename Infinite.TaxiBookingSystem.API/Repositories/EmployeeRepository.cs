@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infinite.TaxiBookingSystem.API.Repositories
 {
-    public class EmployeeRepository : IRepository<Employee>,IGetRepository<Employee>,IEmployeeRepository
+    public class EmployeeRepository : IRepository<Employee>, IGetRepository<Employee>, IEmployeeRepository, IBookingsStatusRepository<Booking>
     {
         private readonly ApplicationDbContext _Context;
 
@@ -45,14 +45,14 @@ namespace Infinite.TaxiBookingSystem.API.Repositories
         public async Task<Employee> GetById(int id)
         {
             var employee = await _Context.Employees.FindAsync(id);
-            if(employee != null)
+            if (employee != null)
             {
                 return employee;
             }
             return null;
         }
 
-        
+
 
         public async Task<Employee> Update(int id, Employee obj)
         {
@@ -79,5 +79,54 @@ namespace Infinite.TaxiBookingSystem.API.Repositories
             return designations;
         }
 
+
+
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------
+        //Bookings Status
+
+        public async Task<IEnumerable<Booking>> GetAllBookings()
+        {
+            var pendings = await _Context.Bookings.Where(h => h.Status == null || h.Status == "REJECTED" || h.Status == "APPROVED").ToListAsync();
+            return pendings;
+        }
+        public async Task<IEnumerable<Booking>> GetAllPendings()
+        {
+            var pendings = await _Context.Bookings.Where(h => h.Status == null).ToListAsync();
+            return pendings;
+        }
+        public async Task<IEnumerable<Booking>> GetAllRejected()
+        {
+            var pendings = await _Context.Bookings.Where(h => h.Status == "REJECTED").ToListAsync();
+            return pendings;
+        }
+        public async Task<IEnumerable<Booking>> GetAllApproved()
+        {
+            var pendings = await _Context.Bookings.Where(h => h.Status == "APPROVED").ToListAsync();
+            return pendings;
+        }
+        public async Task<Booking> Reject(int id)
+        {
+            var rejectProperty = await _Context.Bookings.FindAsync(id);
+            if (rejectProperty != null)
+            {
+                rejectProperty.Status = "REJECTED"; _Context.Bookings.Update(rejectProperty);
+                await _Context.SaveChangesAsync(); return rejectProperty;
+            }
+            return null;
+        }
+        public async Task<Booking> Approve(int id)
+        {
+            var rejectProperty = await _Context.Bookings.FindAsync(id);
+            if (rejectProperty != null)
+            {
+                rejectProperty.Status = "APPROVED"; _Context.Bookings.Update(rejectProperty);
+                await _Context.SaveChangesAsync(); return rejectProperty;
+            }
+            return null;
+        }
+
     }
+
+
 }
+

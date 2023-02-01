@@ -31,6 +31,19 @@ namespace Infinite.TaxiBookingSystem.API.Repositories
 public interface IEmployeeRepository
 {
     Task<IEnumerable<Designation>> GetDesignations();
+
+    
+}
+
+public interface IBookingsStatusRepository<T> where T : class
+{
+    Task<IEnumerable<T>> GetAllBookings();
+    Task<IEnumerable<T>> GetAllPendings();
+    Task<IEnumerable<T>> GetAllApproved();
+    Task<IEnumerable<T>> GetAllRejected();
+
+    Task<T> Reject(int id);
+    Task<T> Approve(int id);
 }
 
 public interface IBookingRepository

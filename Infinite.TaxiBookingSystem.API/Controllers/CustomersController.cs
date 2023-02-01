@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Infinite.TaxiBookingSystem.API.Controllers
@@ -16,11 +17,13 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
     {
         private readonly IRepository<Customer> _repository;
         private readonly IGetRepository<Customer> _getRepository;
+        private readonly ApplicationDbContext _dbContext;
 
-        public CustomersController(IRepository<Customer> repository,IGetRepository<Customer> getRepository)
+        public CustomersController(IRepository<Customer> repository,IGetRepository<Customer> getRepository,ApplicationDbContext dbContext)
         {
             _repository = repository;
             _getRepository = getRepository;
+            _dbContext = dbContext;
         }
 
         [HttpGet("GetAllCustomers")]
@@ -41,16 +44,25 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
         }
 
 
-        [Authorize(Roles ="Custoemer")]
+        [Authorize(Roles = "Customer")]
         [HttpPost("CreateCustomer")]
         public async Task<IActionResult> CreateCustomer([FromBody]Customer customer)
         {
             if (!ModelState.IsValid)
             {
+                
                 return BadRequest();
             }
             await _repository.Create(customer);
-            return CreatedAtRoute("GetCustomerById", new { id = customer.CustomerId }, customer);
+            int id = customer.CustomerId;
+            var loginId = User.FindFirstValue(ClaimTypes.Name);
+
+            var userinDb = _dbContext.Users.FirstOrDefault(x => x.LoginID == loginId);
+            userinDb.CustomerID = id;
+            _dbContext.Users.Update(userinDb);
+            _dbContext.SaveChanges();
+            return CreatedAtRoute("GetCustomerById", new { id = customer.CustomerId }, customer); 
+            
         }
 
         [HttpPut("UpdateCustomer/{id}")]
