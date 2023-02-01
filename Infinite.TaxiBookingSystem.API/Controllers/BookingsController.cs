@@ -57,7 +57,7 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
         //    return NotFound("Please provide valid taxi");
 
         //}
-        [Authorize]
+        //[Authorize]
         [HttpPost("CreateBooking")]
         public async Task<IActionResult> CreateBooking([FromBody] Booking booking)
         {
